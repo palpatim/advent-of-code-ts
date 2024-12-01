@@ -1,0 +1,1 @@
+export const parseBase10Int = (s: string): number => parseInt(s, 10);

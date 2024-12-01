@@ -1,0 +1,15 @@
+{
+  "name": "advent-of-code-ts",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "yarn workspaces run build",
+    "clean": "rm -rf build dist node_modules ; yarn workspaces run clean",
+    "test": "yarn workspaces run test"
+  }
+}
