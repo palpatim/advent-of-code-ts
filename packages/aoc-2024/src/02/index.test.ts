@@ -12,38 +12,12 @@ const getDiffs = (a: number[]): number[] => {
   return result;
 };
 
-/** Warning: mutates `diffs` */
-const analyzeDiffs = (
-  diffs: number[],
-  allowOneUnsafe: boolean = false
-): boolean => {
+const analyzeDiffs = (diffs: number[]): boolean => {
   // Safe if:
   // - all diffs have the same sign
   // - abs(each diff) <= 3
   //
   // If there is an outlier, the report is unsafe
-  //
-  // If we allow removal of outliers, we can reduce the diff array by:
-  //
-  // - If there is more than 1 outlier, the report is unsafe
-  // - If the outlier is the first or last element, the report is safe
-  // - Otherwise, add the outlier to the previous and subsequent diff element,
-  //   and then remove it.
-  //
-  //     ex 1:
-  //       input: [8,6,4,4,1]
-  //       diffs: [2,2,0,3]
-  //       outlier: 0 (idx=2)
-  //       reduced: [2,2,3]
-  //       result is safe (reanalyzing diff == 0 outliers)
-  //
-  //     ex 2:
-  //       input: [1,2,7,8,9]
-  //       diffs: [-1,-5,-1,-1]
-  //       outlier: -5 (idx=1)
-  //       reduced: [-6,-6,-1]
-  //       result is unsafe (reanalyzing diff == 2 outliers)
-
   const numberOfNegativeDiffs = diffs.reduce(
     (acc, curr) => (curr < 0 ? acc + 1 : acc),
     0
@@ -65,25 +39,7 @@ const analyzeDiffs = (
     }
   });
 
-  if (!allowOneUnsafe) {
-    return outlierIndices.length === 0;
-  }
-
-  if (outlierIndices.length > 1) {
-    return false;
-  }
-
-  const outlierIndex = outlierIndices[0];
-  if (outlierIndex === 0 || outlierIndex === diffs.length - 1) {
-    return true;
-  }
-
-  const outlierValue = diffs[outlierIndex];
-  diffs[outlierIndex - 1] += outlierValue;
-  diffs[outlierIndex + 1] += outlierValue;
-  diffs.splice(outlierIndex, 1);
-
-  return analyzeDiffs(diffs, false);
+  return outlierIndices.length === 0;
 };
 
 const solve = (input: string, allowOneUnsafe: boolean = false): number => {
@@ -93,8 +49,17 @@ const solve = (input: string, allowOneUnsafe: boolean = false): number => {
   lines.forEach((line) => {
     const ints = line.split(/\s+/).map(Number);
     const diffs = getDiffs(ints);
-    if (analyzeDiffs(diffs, allowOneUnsafe)) {
+    if (analyzeDiffs(diffs)) {
       result += 1;
+    } else if (allowOneUnsafe) {
+      for (let j = 0; j < ints.length; j++) {
+        const subArray = [...ints.slice(0, j), ...ints.slice(j + 1)];
+        const subDiffs = getDiffs(subArray);
+        if (analyzeDiffs(subDiffs)) {
+          result +=1 ;
+          break;
+        }
+      }
     }
   });
 
@@ -120,6 +85,6 @@ describe("aoc", () => {
   test("part 2", () => {
     const input = readToString(path.join(__dirname, "input.txt"));
     // Original algo == 619, which is too low
-    expect(solve(input, true)).toEqual(-1);
+    expect(solve(input, true)).toEqual(621);
   });
 });
