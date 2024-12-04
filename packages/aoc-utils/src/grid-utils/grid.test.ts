@@ -1,18 +1,11 @@
+import { getOrigin, getGrid } from "./grid-test-utils";
 import {
   getAdjacentCells,
   getCellAtOffsetFromPoint,
   getCellAtPoint,
-  Grid,
   isValidPoint,
+  rotateLeft,
 } from "./grid";
-import { Point } from "./point";
-
-const getOrigin = (): Point => ({ row: 0, col: 0 });
-const getGrid = (): Grid<number> => [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-];
 
 describe("grid-utils", () => {
   describe("isValidPoint", () => {
@@ -55,6 +48,21 @@ describe("grid-utils", () => {
       expect(getAdjacentCells({ row: 1, col: 1 }, getGrid())).toEqual(
         expect.arrayContaining([0, 1, 2, 3, 5, 6, 7, 8])
       );
+    });
+  });
+
+  describe("rotateLeft", () => {
+    test("handles simple case", () => {
+      const grid = getGrid();
+      expect(rotateLeft(grid)).toEqual([
+        [2, 5, 8],
+        [1, 4, 7],
+        [0, 3, 6],
+      ]);
+    });
+
+    test("handles empty grid", () => {
+      expect(rotateLeft([])).toEqual([]);
     });
   });
 });

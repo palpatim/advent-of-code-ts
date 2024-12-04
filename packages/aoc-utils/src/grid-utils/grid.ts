@@ -1,3 +1,4 @@
+import { GridOffsetIterator } from "./grid-offset-iterator";
 import { allOffsets, getPointAtOffset, Offset } from "./offset";
 import { Point } from "./point";
 
@@ -36,4 +37,39 @@ export const isValidPoint = <T>(p: Point, grid: Grid<T>): boolean => {
   return (
     p.row >= 0 && p.row < grid.length && p.col >= 0 && p.col < grid[0].length
   );
+};
+
+/**
+ * Returns a copy of the grid, rotated to the left.
+ *
+ * Example:
+ *     123
+ *     456
+ *     789
+ *
+ * Becomes
+ *     369
+ *     258
+ *     147
+ */
+export const rotateLeft = <T>(grid: Grid<T>): Grid<T> => {
+  if (grid.length === 0) {
+    return [];
+  }
+
+  const rows = grid.length;
+  const cols = grid[0].length;
+  const result: Grid<T> = [];
+
+  // For each column (starting from the rightmost)
+  for (let col = cols - 1; col >= 0; col--) {
+    const newRow: T[] = [];
+    // For each row
+    for (let row = 0; row < rows; row++) {
+      newRow.push(grid[row][col]);
+    }
+    result.push(newRow);
+  }
+
+  return result;
 };
