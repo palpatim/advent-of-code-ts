@@ -6,6 +6,7 @@ import {
   isValidPoint,
   Offset,
   Point,
+  pointEq,
   readToString,
 } from "@palpatim/aoc-utils";
 import * as path from "node:path";
@@ -31,7 +32,7 @@ class Guard {
     this.setState();
   }
 
-  private setState = () => {
+  public setState = () => {
     if (!isValidPoint(this.position, this.grid)) {
       this.state = "OffGrid";
       return;
@@ -118,7 +119,81 @@ const solve1 = (input: string): number => {
 };
 
 const solve2 = (input: string): number => {
-  return -1;
+  const grid = input.split("\n").map((line) => line.split(""));
+  const gridIter = new GridIterator(grid);
+  const guardSymbols = Object.keys(facingDirectionsToOffsets);
+  gridIter.find((v) => guardSymbols.includes(v));
+  if (!gridIter.currentPoint()) {
+    throw new Error("No guard found");
+  }
+
+  const guardStartingPosition = gridIter.currentPoint();
+  const guardStartingDirection = gridIter.peek() as GuardDirection;
+  const guard = new Guard(grid, guardStartingPosition, guardStartingDirection);
+
+  // Mark the guard's starting position as empty so it evaluates properly during
+  // the advance() loop
+  grid[guardStartingPosition.row][guardStartingPosition.col] = ".";
+
+  let loopsDetected = 0;
+
+  const obstacleIter = new GridIterator(grid);
+
+  // Remember the point at which we place an obstacle so we can reset it after
+  // we're done testing the position
+  let obstaclePoint: Point = obstacleIter.currentPoint();
+
+  const reset = () => {
+    grid[obstaclePoint.row][obstaclePoint.col] = ".";
+    guard.direction = guardStartingDirection;
+    guard.position = guardStartingPosition;
+    guard.setState();
+  };
+
+  while (true) {
+    // Place obstacle at the next clear spot
+    if (obstacleIter.find((v) => v === ".") === undefined) {
+      // No more clear spots, we're done with all tests
+      break;
+    }
+
+    // Remember the obstacle position so we can reset it after we're done with this test
+    obstaclePoint = obstacleIter.currentPoint();
+
+    obstacleIter.next();
+
+    // Can't place an obstacle at the guard's starting position
+    if (pointEq(obstaclePoint, guardStartingPosition)) {
+      continue;
+    }
+
+    // Place an obstacle
+    grid[obstaclePoint.row][obstaclePoint.col] = "#";
+
+    // Test for loop
+    const visited = new Set<string>();
+    while (guard.state !== "OffGrid") {
+      // If the guard has visited this space before walking in the same direction,
+      // they're in a loop
+      const visitedKey = `${guard.position.row},${guard.position.col},${guard.direction}`;
+      if (visited.has(visitedKey)) {
+        loopsDetected += 1;
+        break;
+      }
+      visited.add(visitedKey);
+      if (guard.state === "Blocked") {
+        guard.rotateRight();
+      }
+      guard.advance();
+    }
+
+    // Either the guard has exited the grid, or we found a loop. Either way,
+    // reset the grid & the guard to the starting position and try the loop
+    // again
+    reset();
+  }
+
+  return loopsDetected;
 };
 
 describe("aoc", () => {
@@ -127,18 +202,18 @@ describe("aoc", () => {
     expect(solve1(input)).toEqual(41);
   });
 
-  test.only("part 1", () => {
+  test("part 1", () => {
     const input = readToString(path.join(__dirname, "input.txt"));
     expect(solve1(input)).toEqual(4722);
   });
 
   test("demo 2", () => {
     const input = readToString(path.join(__dirname, "input-demo.txt"));
-    expect(solve2(input)).toEqual(-1);
+    expect(solve2(input)).toEqual(6);
   });
 
   test("part 2", () => {
     const input = readToString(path.join(__dirname, "input.txt"));
-    expect(solve2(input)).toEqual(-1);
+    expect(solve2(input)).toEqual(1602);
   });
 });
