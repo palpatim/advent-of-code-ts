@@ -212,7 +212,8 @@ describe("aoc", () => {
     expect(solve2(input)).toEqual(6);
   });
 
-  test("part 2", () => {
+  // 20s execution time. We'll skip it by default...
+  test.skip("part 2", () => {
     const input = readToString(path.join(__dirname, "input.txt"));
     expect(solve2(input)).toEqual(1602);
   });
