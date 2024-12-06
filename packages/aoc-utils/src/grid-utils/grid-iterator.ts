@@ -1,4 +1,4 @@
-import { Grid, isValidPoint } from "./grid";
+import { getCellAtPoint, Grid, isValidPoint } from "./grid";
 import { GridIteratorResult } from "./grid-iterator-result";
 import { Point } from "./point";
 
@@ -58,5 +58,23 @@ export class GridIterator<T> implements Iterable<T> {
       }
     }
     return result;
+  };
+
+  /**
+   * Advances iterator until `pred` is true or end of grid is reached. Returns
+   * the value of the cell that satisfies `pred` or `undefined` if no such cell
+   * exists. At exit, gridIter.currentPoint() will contain the location of the
+   * cell that matches, or a point off the grid if no cell matched.
+   */
+  find = (pred: (v: T) => boolean): T | undefined => {
+    let done = false;
+    while (!done) {
+      const value = getCellAtPoint(this.currentPoint(), this.grid)!;
+      if (pred(value)) {
+        return value;
+      }
+      const result = this.next();
+      done = result.done ?? false;
+    }
   };
 }
