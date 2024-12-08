@@ -1,7 +1,7 @@
 import { Grid, isValidPoint } from "./grid";
 import { GridIterator } from "./grid-iterator";
 import { GridIteratorResult } from "./grid-iterator-result";
-import { Offset, getPointAtOffset } from "./offset";
+import { NamedOffset, getPointAtOffset } from "./offset";
 import { Point } from "./point";
 
 /**
@@ -16,9 +16,9 @@ import { Point } from "./point";
  *     cells in the order: 1, 4, 7
  */
 export class GridOffsetIterator<T> extends GridIterator<T> {
-  offset: Offset;
+  offset: NamedOffset;
 
-  constructor(grid: Grid<T>, start: Point, offset: Offset) {
+  constructor(grid: Grid<T>, start: Point, offset: NamedOffset) {
     super(grid);
     this.offset = offset;
     this.row = start.row;

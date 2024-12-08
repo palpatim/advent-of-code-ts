@@ -1,5 +1,5 @@
 import {
-  allOffsets,
+  allNamedOffsets,
   getPointAtOffset,
   GridIterator,
   GridOffsetIterator,
@@ -28,7 +28,7 @@ const solve1 = (input: string, target: string): number => {
       continue;
     }
 
-    for (const offset of allOffsets()) {
+    for (const offset of allNamedOffsets()) {
       const offsetIter = new GridOffsetIterator(grid, currentPoint, offset);
 
       const segment = offsetIter.map((v) => v);

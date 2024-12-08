@@ -17,6 +17,13 @@ describe("GridIterator", () => {
     expect(iterator.next().done).toBeTruthy();
   });
 
+  test("next with argument", () => {
+    const iterator = new GridIterator(getGrid());
+    expect(iterator.next(2).value).toBe(1);
+    expect(iterator.next(1).value).toBe(2);
+    expect(iterator.next().value).toBe(3);
+  });
+
   test("supports for-in iteration", () => {
     let expectedResult = 0;
     const iter = new GridIterator(getGrid());
@@ -37,6 +44,20 @@ describe("GridIterator", () => {
     expect(iterator.currentPoint()).toEqual({ row: 0, col: 0 });
     iterator.next();
     expect(iterator.currentPoint()).toEqual({ row: 0, col: 1 });
+  });
+
+  test("done", () => {
+    const iterator = new GridIterator([[0], [1]]);
+    expect(iterator.done).toBeFalsy();
+
+    iterator.next();
+    expect(iterator.done).toBe(false);
+
+    iterator.next();
+    expect(iterator.done).toBe(false);
+
+    iterator.next();
+    expect(iterator.done).toBe(true);
   });
 
   test("GridIterableResult contains point", () => {

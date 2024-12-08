@@ -4,7 +4,7 @@ import {
   Grid,
   GridIterator,
   isValidPoint,
-  Offset,
+  NamedOffset,
   Point,
   pointEq,
   readToString,
@@ -13,7 +13,7 @@ import * as path from "node:path";
 
 type GuardDirection = "^" | ">" | "v" | "<";
 
-const facingDirectionsToOffsets: Record<GuardDirection, Offset> = {
+const facingDirectionsToOffsets: Record<GuardDirection, NamedOffset> = {
   ">": "E",
   "<": "W",
   "^": "N",

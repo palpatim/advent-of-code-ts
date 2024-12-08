@@ -1,16 +1,17 @@
-import { allOffsets, getPointAtOffset } from "./offset";
+import { getOrigin } from "./grid-test-utils";
+import { allNamedOffsets, getPointAtOffset, getOffset } from "./offset";
 describe("offset", () => {
   describe("allOffsets", () => {
     it("Returns all values", () => {
-      expect(allOffsets()).toEqual([
-        "NW",
+      expect(allNamedOffsets()).toEqual([
+        "E",
         "N",
         "NE",
-        "W",
-        "E",
-        "SW",
+        "NW",
         "S",
         "SE",
+        "SW",
+        "W",
       ]);
     });
   });
@@ -62,6 +63,29 @@ describe("offset", () => {
       expect(getPointAtOffset({ row: 0, col: 0 }, "SE")).toEqual({
         row: 1,
         col: 1,
+      });
+    });
+  });
+
+  describe("getOffset", () => {
+    test("returns zero offset", () => {
+      expect(getOffset(getOrigin(), getOrigin())).toEqual({
+        deltaRow: 0,
+        deltaCol: 0,
+      });
+    });
+
+    test("returns offset", () => {
+      expect(getOffset(getOrigin(), { row: 1, col: 1 })).toEqual({
+        deltaRow: 1,
+        deltaCol: 1,
+      });
+    });
+
+    test("returns negative offset", () => {
+      expect(getOffset(getOrigin(), { row: -1, col: -1 })).toEqual({
+        deltaRow: -1,
+        deltaCol: -1,
       });
     });
   });

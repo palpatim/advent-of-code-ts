@@ -1,5 +1,5 @@
 import { GridOffsetIterator } from "./grid-offset-iterator";
-import { allOffsets, getPointAtOffset, Offset } from "./offset";
+import { allNamedOffsets, getPointAtOffset, NamedOffset } from "./offset";
 import { Point } from "./point";
 
 /**
@@ -9,7 +9,7 @@ export type Grid<T> = T[][];
 
 export const getAdjacentCells = <T>(p: Point, grid: Grid<T>): T[] => {
   const result: T[] = [];
-  allOffsets().forEach((o) => {
+  allNamedOffsets().forEach((o) => {
     const val = getCellAtOffsetFromPoint(p, o, grid);
     if (typeof val !== "undefined") {
       result.push(val);
@@ -20,7 +20,7 @@ export const getAdjacentCells = <T>(p: Point, grid: Grid<T>): T[] => {
 
 export const getCellAtOffsetFromPoint = <T>(
   p: Point,
-  offset: Offset,
+  offset: NamedOffset,
   grid: Grid<T>
 ): T | undefined => {
   const newP = getPointAtOffset(p, offset);
