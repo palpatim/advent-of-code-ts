@@ -91,20 +91,20 @@ const solve1 = (input: string): number => {
   const grid = input.split("\n").map((line) => line.split(""));
   const gridIter = new GridIterator(grid);
   const guardSymbols = Object.keys(facingDirectionsToOffsets);
-  gridIter.find((v) => guardSymbols.includes(v));
-  if (!gridIter.currentPoint()) {
+  const iterResult = gridIter.findIndex((v) => guardSymbols.includes(v));
+  if (!iterResult.value) {
     throw new Error("No guard found");
   }
 
   const guard = new Guard(
     grid,
-    gridIter.currentPoint(),
-    gridIter.peek() as GuardDirection
+    iterResult.point,
+    iterResult.value as GuardDirection
   );
 
   // Mark the guard's starting position as empty so it evaluates properly during
   // the advance() loop
-  grid[gridIter.currentPoint().row][gridIter.currentPoint().col] = ".";
+  grid[iterResult.point.row][iterResult.point.col] = ".";
 
   const visited = new Set<string>();
   while (guard.state !== "OffGrid") {
@@ -122,13 +122,13 @@ const solve2 = (input: string): number => {
   const grid = input.split("\n").map((line) => line.split(""));
   const gridIter = new GridIterator(grid);
   const guardSymbols = Object.keys(facingDirectionsToOffsets);
-  gridIter.find((v) => guardSymbols.includes(v));
-  if (!gridIter.currentPoint()) {
+  const iterResult = gridIter.findIndex((v) => guardSymbols.includes(v));
+  if (!iterResult.value) {
     throw new Error("No guard found");
   }
 
-  const guardStartingPosition = gridIter.currentPoint();
-  const guardStartingDirection = gridIter.peek() as GuardDirection;
+  const guardStartingPosition = iterResult.point;
+  const guardStartingDirection = iterResult.value as GuardDirection;
   const guard = new Guard(grid, guardStartingPosition, guardStartingDirection);
 
   // Mark the guard's starting position as empty so it evaluates properly during
@@ -152,15 +152,14 @@ const solve2 = (input: string): number => {
 
   while (true) {
     // Place obstacle at the next clear spot
-    if (obstacleIter.find((v) => v === ".") === undefined) {
+    const obstacleIterResult = obstacleIter.findIndex((v) => v === ".");
+    if (obstacleIterResult.value === undefined) {
       // No more clear spots, we're done with all tests
       break;
     }
 
     // Remember the obstacle position so we can reset it after we're done with this test
-    obstaclePoint = obstacleIter.currentPoint();
-
-    obstacleIter.next();
+    obstaclePoint = obstacleIterResult.point;
 
     // Can't place an obstacle at the guard's starting position
     if (pointEq(obstaclePoint, guardStartingPosition)) {
