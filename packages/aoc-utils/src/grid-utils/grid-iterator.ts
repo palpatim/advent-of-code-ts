@@ -78,19 +78,33 @@ export class GridIterator<T> implements Iterable<T> {
     return result;
   };
 
-  /**
-   * Advances iterator until `pred` is true or end of grid is reached. Returns
-   * the value of the cell that satisfies `pred` or `undefined` if no such cell
-   * exists. At exit, gridIter.currentPoint() will contain the location of the
-   * cell that matches, or a point off the grid if no cell matched.
-   */
   find = (pred: (v: T) => boolean): T | undefined => {
     while (!this.done) {
       const value = getCellAtPoint(this.currentPoint(), this.grid)!;
       if (pred(value)) {
+        this.next();
         return value;
       }
       this.next();
     }
+    return undefined;
+  };
+
+  /**
+   * Advances iterator until `pred` is true or end of grid is reached. Returns a
+   * GridIteratorResult describing the cell that satisfies `pred`, or a `done`
+   * result if no such cell exists.
+   */
+  findIndex = (pred: (v: T) => boolean): GridIteratorResult<T> => {
+    while (!this.done) {
+      const value = getCellAtPoint(this.currentPoint(), this.grid)!;
+      if (pred(value)) {
+        const result = { value, done: this.done, point: this.currentPoint() };
+        this.next();
+        return result;
+      }
+      this.next();
+    }
+    return { done: true, value: undefined, point: this.currentPoint() };
   };
 }
