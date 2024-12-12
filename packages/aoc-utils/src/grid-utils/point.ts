@@ -12,3 +12,10 @@ export const keyToPoint = (key: string): Point => {
   const [row, col] = key.split(",").map(Number);
   return { row, col };
 };
+
+export const comparePoints = (a: Point, b: Point): number => {
+  if (a.row !== b.row) {
+    return a.row - b.row;
+  }
+  return a.col - b.col;
+};

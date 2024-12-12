@@ -1,5 +1,5 @@
 import { getOrigin } from "./grid-test-utils";
-import { keyToPoint, pointEq, pointToKey } from "./point";
+import { comparePoints, keyToPoint, pointEq, pointToKey } from "./point";
 
 describe("point", () => {
   describe("pointEq", () => {
@@ -45,6 +45,20 @@ describe("point", () => {
 
     test("handles negative numbers", () => {
       expect(keyToPoint(" -1, -2 ")).toEqual({ row: -1, col: -2 });
+    });
+  });
+
+  describe("comparePoints", () => {
+    test("should return 0 for the same point", () => {
+      expect(comparePoints(getOrigin(), getOrigin())).toBe(0);
+    });
+
+    test("should return negative for a point earlier in the grid", () => {
+      expect(comparePoints(getOrigin(), { row: 0, col: 1 })).toBeLessThan(0);
+    });
+
+    test("should return positive for a point later in the grid", () => {
+      expect(comparePoints({ row: 0, col: 1 }, getOrigin())).toBeGreaterThan(0);
     });
   });
 });
