@@ -5,6 +5,7 @@ import {
   getCellAtPoint,
   isValidPoint,
   rotateLeft,
+  setCellAtPoint,
 } from "./grid";
 
 describe("grid-utils", () => {
@@ -63,6 +64,29 @@ describe("grid-utils", () => {
 
     test("handles empty grid", () => {
       expect(rotateLeft([])).toEqual([]);
+    });
+  });
+
+  describe("setCellAtPoint", () => {
+    test("handles simple case", () => {
+      const grid = getGrid();
+      setCellAtPoint(99, getOrigin(), grid);
+      expect(grid).toEqual([
+        [99, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+      ]);
+
+    });
+
+    test("does nothing for invalid points", () => {
+      const grid = getGrid();
+      setCellAtPoint(99, { row: 100, col: 100 }, grid);
+      expect(grid).toEqual([
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+      ]);
     });
   });
 });

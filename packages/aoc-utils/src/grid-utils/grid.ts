@@ -73,3 +73,17 @@ export const rotateLeft = <T>(grid: Grid<T>): Grid<T> => {
 
   return result;
 };
+
+/**
+ * Sets the cell at the given point in the grid. If the point is not valid, this
+ * function does nothing.
+ */
+export const setCellAtPoint = <T>(
+  newValue: T,
+  p: Point,
+  grid: Grid<T>
+): void => {
+  if (isValidPoint(p, grid)) {
+    grid[p.row][p.col] = newValue;
+  }
+};
