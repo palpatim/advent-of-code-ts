@@ -1,4 +1,3 @@
-import { GridOffsetIterator } from "./grid-offset-iterator";
 import { allNamedOffsets, getPointAtOffset, NamedOffset } from "./offset";
 import { Point } from "./point";
 
