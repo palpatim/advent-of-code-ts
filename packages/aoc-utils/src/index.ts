@@ -1,3 +1,4 @@
+export * from "./algorithms";
 export * from "./array-utils";
 export * from "./file-utils";
 export * from "./grid-utils";
