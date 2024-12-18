@@ -6,6 +6,20 @@ import { Point } from "./point";
  */
 export type Grid<T> = T[][];
 
+type RowFormatter<T> = (row: T[]) => string;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const basicFormatter: RowFormatter<any> = (row: any[]): string =>
+  row.map((value) => `${value}`).join("");
+
+export const dumpGrid = <T>(
+  grid: Grid<T>,
+  formatter: RowFormatter<T> = basicFormatter
+): string => {
+  const rows = grid.map(formatter);
+  return rows.join("\n");
+};
+
 export const getAdjacentCells = <T>(p: Point, grid: Grid<T>): T[] => {
   const result: T[] = [];
   allNamedOffsets().forEach((o) => {

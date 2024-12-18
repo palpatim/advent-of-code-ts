@@ -173,7 +173,8 @@ describe("aoc", () => {
 
   test("part 2", () => {
     const input = readToString(path.join(__dirname, "input.txt"));
-    // Solution returns 555, which is too high
+    // Solution returns 555, which is too high. Adding a "visited" check on path
+    // in the main DFS loop reduces to 481, which is also incorrect.
     expect(solve(input, false)).toEqual(-1);
   });
 });
