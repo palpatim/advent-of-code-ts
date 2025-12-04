@@ -2,7 +2,7 @@ import {
   getCellAtPoint,
   getPointAtOffset,
   Grid,
-  GridIterator,
+  BrokenGridIterator,
   NamedOffset,
   Point,
   readToString,
@@ -219,7 +219,7 @@ const solve = (input: string, widen: boolean = false): number => {
 
   const moves = movesStr.replace(/\n/g, "").split("") as [];
 
-  let botPos = new GridIterator(grid).findIndex(isBot)?.point;
+  let botPos = new BrokenGridIterator(grid).findIndex(isBot)?.point;
   if (!botPos) {
     throw new Error("No bot found");
   }
@@ -234,7 +234,7 @@ const solve = (input: string, widen: boolean = false): number => {
   }
 
   let result = 0;
-  const gridIter = new GridIterator(grid);
+  const gridIter = new BrokenGridIterator(grid);
   let done = gridIter.done;
   while (!done) {
     const { value, point, done: _done } = gridIter.next();

@@ -2,7 +2,7 @@ import {
   getAdjacentCells,
   Grid,
   Point,
-  PointableGridIterator,
+  GridIterator,
   readToString,
   setCellAtPoint,
 } from "@palpatim/aoc-utils";
@@ -21,7 +21,7 @@ const solve = (input: string, iterate: boolean): number => {
   let lastResult = 0;
   let result = 0;
   do {
-    const iter = new PointableGridIterator(grid);
+    const iter = new GridIterator(grid);
     lastResult = result;
     const pointsToClear: Point[] = [];
     for (const el of iter) {

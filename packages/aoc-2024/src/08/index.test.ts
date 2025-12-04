@@ -1,7 +1,7 @@
 import {
   getOffset,
   getPointAtOffset,
-  GridIterator,
+  BrokenGridIterator,
   isValidPoint,
   keyToPoint,
   pointToKey,
@@ -20,7 +20,7 @@ interface Resonances {
 const solve = (input: string, permissive: boolean): number => {
   const lines = input.split("\n");
   const grid = lines.map((line) => line.split(""));
-  const gridIter = new GridIterator(grid);
+  const gridIter = new BrokenGridIterator(grid);
   const resonances: Record<string, Resonances> = {};
 
   // Populate antenna locations

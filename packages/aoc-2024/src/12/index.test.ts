@@ -2,7 +2,7 @@ import {
   addTwoValues,
   getCellAtPoint,
   getPointAtOffset,
-  GridIterator,
+  BrokenGridIterator,
   isValidPoint,
   keyToPoint,
   NamedOffset,
@@ -81,7 +81,7 @@ const solve = (input: string, countSides: boolean = false): number => {
 
   // Build regions
   const visited = new Set<string>();
-  const gridIter = new GridIterator(grid);
+  const gridIter = new BrokenGridIterator(grid);
   let done = false;
   const regions: Set<string>[] = [];
   const perimeters: Set<string>[] = [];

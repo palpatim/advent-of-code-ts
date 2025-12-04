@@ -3,7 +3,7 @@ import {
   getCellAtPoint,
   getPointAtOffset,
   Grid,
-  GridIterator,
+  BrokenGridIterator,
   isValidPoint,
   Point,
   pointToKey,
@@ -40,7 +40,7 @@ const hike = (start: Point, grid: Grid<number>): Record<string, number> => {
 
 const solve = (input: string, countValues: boolean): number => {
   const grid = input.split("\n").map((line) => line.split("").map(Number));
-  const gridIter = new GridIterator(grid);
+  const gridIter = new BrokenGridIterator(grid);
 
   let done = false;
 

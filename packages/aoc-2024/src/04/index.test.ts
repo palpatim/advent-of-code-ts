@@ -1,20 +1,20 @@
 import {
   allNamedOffsets,
   getPointAtOffset,
-  GridIterator,
-  GridOffsetIterator,
+  BrokenGridIterator,
+  BrokenGridIteratorResult,
+  BrokenGridOffsetIterator,
   readToString,
   reverseString,
 } from "@palpatim/aoc-utils";
-import { GridIteratorResult } from "@palpatim/aoc-utils/dist/grid-utils/grid-iterator-result";
 import * as path from "node:path";
 
 const solve1 = (input: string, target: string): number => {
   let result = 0;
   const grid = input.split("\n").map((line) => line.split(""));
-  const gridIter = new GridIterator(grid);
+  const gridIter = new BrokenGridIterator(grid);
 
-  let iterResult: GridIteratorResult<string | undefined> = {
+  let iterResult: BrokenGridIteratorResult<string | undefined> = {
     done: false,
     value: gridIter.peek(),
     point: gridIter.currentPoint(),
@@ -29,7 +29,11 @@ const solve1 = (input: string, target: string): number => {
     }
 
     for (const offset of allNamedOffsets()) {
-      const offsetIter = new GridOffsetIterator(grid, currentPoint, offset);
+      const offsetIter = new BrokenGridOffsetIterator(
+        grid,
+        currentPoint,
+        offset
+      );
 
       const segment = offsetIter.map((v) => v);
       const segmentString = segment.join("");
@@ -46,9 +50,9 @@ const solve2 = (input: string, target: string): number => {
   let result = 0;
   const targetStartingChar = target[Math.floor(target.length / 2)];
   const grid = input.split("\n").map((line) => line.split(""));
-  const gridIter = new GridIterator(grid);
+  const gridIter = new BrokenGridIterator(grid);
 
-  let iterResult: GridIteratorResult<string | undefined> = {
+  let iterResult: BrokenGridIteratorResult<string | undefined> = {
     done: false,
     value: gridIter.peek(),
     point: gridIter.currentPoint(),
@@ -64,7 +68,11 @@ const solve2 = (input: string, target: string): number => {
     }
 
     const lrSegmentStart = getPointAtOffset(currentPoint, "NW");
-    const lrSegmentIter = new GridOffsetIterator(grid, lrSegmentStart, "SE");
+    const lrSegmentIter = new BrokenGridOffsetIterator(
+      grid,
+      lrSegmentStart,
+      "SE"
+    );
     const lrSegment = lrSegmentIter
       .map((v) => v)
       .slice(0, 3)
@@ -73,7 +81,11 @@ const solve2 = (input: string, target: string): number => {
       lrSegment === target || reverseString(lrSegment) === target;
 
     const rlSegmentStart = getPointAtOffset(currentPoint, "NE");
-    const rlSegmentIter = new GridOffsetIterator(grid, rlSegmentStart, "SW");
+    const rlSegmentIter = new BrokenGridOffsetIterator(
+      grid,
+      rlSegmentStart,
+      "SW"
+    );
     const rlSegment = rlSegmentIter
       .map((v) => v)
       .slice(0, 3)

@@ -2,7 +2,7 @@ import {
   getCellAtPoint,
   getPointAtOffset,
   Grid,
-  GridIterator,
+  BrokenGridIterator,
   isValidPoint,
   NamedOffset,
   Point,
@@ -89,7 +89,7 @@ class Guard {
 
 const solve1 = (input: string): number => {
   const grid = input.split("\n").map((line) => line.split(""));
-  const gridIter = new GridIterator(grid);
+  const gridIter = new BrokenGridIterator(grid);
   const guardSymbols = Object.keys(facingDirectionsToOffsets);
   const iterResult = gridIter.findIndex((v) => guardSymbols.includes(v));
   if (!iterResult.value) {
@@ -120,7 +120,7 @@ const solve1 = (input: string): number => {
 
 const solve2 = (input: string): number => {
   const grid = input.split("\n").map((line) => line.split(""));
-  const gridIter = new GridIterator(grid);
+  const gridIter = new BrokenGridIterator(grid);
   const guardSymbols = Object.keys(facingDirectionsToOffsets);
   const iterResult = gridIter.findIndex((v) => guardSymbols.includes(v));
   if (!iterResult.value) {
@@ -137,7 +137,7 @@ const solve2 = (input: string): number => {
 
   let loopsDetected = 0;
 
-  const obstacleIter = new GridIterator(grid);
+  const obstacleIter = new BrokenGridIterator(grid);
 
   // Remember the point at which we place an obstacle so we can reset it after
   // we're done testing the position

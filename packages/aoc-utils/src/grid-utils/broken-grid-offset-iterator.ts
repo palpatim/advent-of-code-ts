@@ -1,5 +1,6 @@
 import { Grid, isValidPoint } from "./grid";
-import { GridIterator, GridIteratorResult } from "./grid-iterator";
+import { BrokenGridIterator } from "./broken-grid-iterator";
+import { BrokenGridIteratorResult } from "./broken-grid-iterator-result";
 import { NamedOffset, getPointAtOffset } from "./offset";
 import { Point } from "./point";
 
@@ -14,37 +15,29 @@ import { Point } from "./point";
  * an offset of "S", and a starting point of {0,0} the iterator will return the
  *     cells in the order: 1, 4, 7
  */
-export class GridOffsetIterator<T> extends GridIterator<T> {
+export class BrokenGridOffsetIterator<T> extends BrokenGridIterator<T> {
   offset: NamedOffset;
-  _done: boolean;
 
   constructor(grid: Grid<T>, start: Point, offset: NamedOffset) {
     super(grid);
     this.offset = offset;
     this.row = start.row;
     this.col = start.col;
-    this._done = false;
   }
 
-  [Symbol.iterator] = (): GridOffsetIterator<T> => {
+  [Symbol.iterator] = (): BrokenGridOffsetIterator<T> => {
     return this;
   };
 
-  get done(): boolean {
-    return this._done;
-  }
-
-  _next = (): IteratorResult<GridIteratorResult<T>> => {
-    const currentPoint = this.currentPoint;
+  next = (): BrokenGridIteratorResult<T> => {
+    const currentPoint = this.currentPoint();
     if (!isValidPoint(currentPoint, this.grid)) {
-      this._done = true;
-      return { done: true, value: undefined };
+      return { done: true, value: undefined, point: currentPoint };
     }
-    const value = this.currentValue!;
-    const point = this.currentPoint;
+    const value = this.grid[this.row][this.col];
     const nextPoint = getPointAtOffset(currentPoint, this.offset);
     this.row = nextPoint.row;
     this.col = nextPoint.col;
-    return { done: false, value: { value, point } };
+    return { done: false, value, point: currentPoint };
   };
 }
