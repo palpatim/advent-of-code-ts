@@ -1,28 +1,66 @@
-import { readToString } from '@palpatim/aoc-utils';
+import {
+  getAdjacentCells,
+  Grid,
+  Point,
+  PointableGridIterator,
+  readToString,
+  setCellAtPoint,
+} from "@palpatim/aoc-utils";
 import * as path from "node:path";
 
-const solve = (input: string): number => {
-  return -1;
+type GridElement = "." | "@";
+
+const parseGrid = (input: string): GridElement[][] => {
+  const grid = input.split("\n").map((line) => line.split(""));
+  return grid as Grid<GridElement>;
+};
+
+const solve = (input: string, iterate: boolean): number => {
+  const grid = parseGrid(input);
+
+  let lastResult = 0;
+  let result = 0;
+  do {
+    const iter = new PointableGridIterator(grid);
+    lastResult = result;
+    const pointsToClear: Point[] = [];
+    for (const el of iter) {
+      const { value, point } = el;
+      if (value === ".") {
+        continue;
+      }
+      const neighbors = getAdjacentCells(point, grid);
+      const blockedNeighbors = neighbors.filter((n) => n == "@");
+      if (blockedNeighbors.length < 4) {
+        pointsToClear.push(point);
+        result += 1;
+      }
+    }
+    console.log(`Clearing ${pointsToClear.length} points`);
+    pointsToClear.forEach((p) => setCellAtPoint(".", p, grid));
+  } while (iterate && result !== lastResult);
+
+  return result;
 };
 
 describe("aoc", () => {
   test("demo 1", () => {
     const input = readToString(path.join(__dirname, "input-demo.txt"));
-    expect(solve(input)).toEqual(-1);
+    expect(solve(input, false)).toEqual(13);
   });
 
   test("part 1", () => {
     const input = readToString(path.join(__dirname, "input.txt"));
-    expect(solve(input)).toEqual(-1);
+    expect(solve(input, false)).toEqual(1523);
   });
 
   test("demo 2", () => {
     const input = readToString(path.join(__dirname, "input-demo.txt"));
-    expect(solve(input)).toEqual(-1);
+    expect(solve(input, true)).toEqual(43);
   });
 
   test("part 2", () => {
     const input = readToString(path.join(__dirname, "input.txt"));
-    expect(solve(input)).toEqual(-1);
+    expect(solve(input, true)).toEqual(9290);
   });
 });
