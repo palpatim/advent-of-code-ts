@@ -36,7 +36,6 @@ const solve = (input: string, iterate: boolean): number => {
         result += 1;
       }
     }
-    console.log(`Clearing ${pointsToClear.length} points`);
     pointsToClear.forEach((p) => setCellAtPoint(".", p, grid));
   } while (iterate && result !== lastResult);
 
