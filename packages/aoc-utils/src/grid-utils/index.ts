@@ -2,6 +2,7 @@ export * from "./grid";
 export * from "./broken-grid-iterator";
 export * from "./broken-grid-iterator-result";
 export * from "./grid-iterator";
+export * from "./grid-offset-iterator";
 export * from "./broken-grid-offset-iterator";
 export * from "./offset";
 export * from "./point";

@@ -78,6 +78,29 @@ export class GridIterator<T> {
     return undefined;
   };
 
+  some = (pred: (v: T) => boolean): boolean => {
+    for (const nextValue of this) {
+      if (pred(nextValue.value)) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  every = (pred: (v: T) => boolean): boolean => {
+    for (const nextValue of this) {
+      if (!pred(nextValue.value)) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  reset = (): void => {
+    this.row = 0;
+    this.col = 0;
+  };
+
   _next = (): IteratorResult<GridIteratorResult<T>> => {
     if (this.row >= this.grid.length) {
       return { done: true, value: undefined };

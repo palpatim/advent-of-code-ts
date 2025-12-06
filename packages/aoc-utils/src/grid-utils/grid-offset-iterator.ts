@@ -15,11 +15,13 @@ import { Point } from "./point";
  *     cells in the order: 1, 4, 7
  */
 export class GridOffsetIterator<T> extends GridIterator<T> {
+  start: Point;
   offset: NamedOffset;
   _done: boolean;
 
   constructor(grid: Grid<T>, start: Point, offset: NamedOffset) {
     super(grid);
+    this.start = start;
     this.offset = offset;
     this.row = start.row;
     this.col = start.col;
@@ -46,5 +48,10 @@ export class GridOffsetIterator<T> extends GridIterator<T> {
     this.row = nextPoint.row;
     this.col = nextPoint.col;
     return { done: false, value: { value, point } };
+  };
+
+  reset = () => {
+    this.col = this.start.col;
+    this.row = this.start.row;
   };
 }

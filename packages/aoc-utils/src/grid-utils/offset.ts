@@ -8,7 +8,7 @@ export interface Offset {
   deltaCol: number;
 }
 
-const NAMED_OFFSETS = {
+const NAMED_OFFSETS: Record<string, Offset> = {
   NW: { deltaRow: -1, deltaCol: -1 },
   N: { deltaRow: -1, deltaCol: 0 },
   NE: { deltaRow: -1, deltaCol: 1 },

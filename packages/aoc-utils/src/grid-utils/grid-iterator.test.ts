@@ -87,4 +87,34 @@ describe("GridIterator", () => {
     const result = iterator.map((value) => value + 1);
     expect(result).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   });
+
+  test("some", () => {
+    const iterator = new GridIterator(getGrid());
+    expect(iterator.some((value) => value === 5)).toBe(true);
+  });
+
+  test("some returns false when no match", () => {
+    const iterator = new GridIterator(getGrid());
+    expect(iterator.some((value) => value === 10)).toBe(false);
+  });
+
+  test("every", () => {
+    const iterator = new GridIterator(getGrid());
+    expect(iterator.every((value) => value < 10)).toBe(true);
+  });
+
+  test("every returns false when not all match", () => {
+    const iterator = new GridIterator(getGrid());
+    expect(iterator.every((value) => value < 5)).toBe(false);
+  });
+
+  test("reset", () => {
+    const iterator = new GridIterator(getGrid());
+    iterator.next();
+    iterator.next();
+    expect(iterator.currentPoint).toEqual({ row: 0, col: 2 });
+    iterator.reset();
+    expect(iterator.currentPoint).toEqual({ row: 0, col: 0 });
+    expect(iterator.next().value.value).toBe(0);
+  });
 });
