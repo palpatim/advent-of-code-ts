@@ -78,6 +78,17 @@ export class GridIterator<T> {
     return undefined;
   };
 
+  findResult = (
+    pred: (R: GridIteratorResult<T>) => boolean
+  ): GridIteratorResult<T> | undefined => {
+    for (const nextValue of this) {
+      if (pred(nextValue)) {
+        return nextValue;
+      }
+    }
+    return undefined;
+  };
+
   some = (pred: (v: T) => boolean): boolean => {
     for (const nextValue of this) {
       if (pred(nextValue.value)) {
